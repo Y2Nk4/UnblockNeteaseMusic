@@ -15,9 +15,15 @@ const config = require('./cli.js')
 .option(['-h', '--help'], {action: 'help'})
 .parse(process.argv)
 
+// config是通过解析cli输入来获得的
+// 从config里导入指定的address
 global.address = config.address
+
+// 支持以:为分隔监听多个端口
 config.port = (config.port || '8080').split(':').map(string => parseInt(string))
+// 检查端口是否合法
 const invalid = value => (isNaN(value) || value < 1 || value > 65535)
+// some函数只要求其中一个值合法
 if(config.port.some(invalid)){
 	console.log('Port must be a number higher than 0 and lower than 65535.')
 	process.exit(1)
